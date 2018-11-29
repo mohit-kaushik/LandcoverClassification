@@ -12,3 +12,8 @@ def conv_block(input_x, n_filters):
 	img_encoded = layers.BatchNormalization()(img_encoded)
 	img_encoded = layers.Activation('relu')(img_encoded)
 	return img_encoded
+
+def encoder_block(input_x, n_filters):
+	encoded = conv_block(input_x, n_filters)
+	encoded_pool = layers.MaxPooling2D((2, 2), strides=(2, 2))(encoded)
+	return encoded_pool, encoded
