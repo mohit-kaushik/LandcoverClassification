@@ -8,7 +8,7 @@ def conv_block(input_x, n_filters):
 	img_encoded = layers.Conv2D(n_filters, (3, 3), padding='same')(input_x)
 	img_encoded = layers.BatchNormalization()(img_encoded)
 	img_encoded = layers.Activation('relu')(img_encoded)
-	img_encoded = layers.Conv2D(num_filters, (3, 3), padding='same')(img_encoded)
+	img_encoded = layers.Conv2D(n_filters, (3, 3), padding='same')(img_encoded)
 	img_encoded = layers.BatchNormalization()(img_encoded)
 	img_encoded = layers.Activation('relu')(img_encoded)
 	return img_encoded
@@ -17,3 +17,19 @@ def encoder_block(input_x, n_filters):
 	encoded = conv_block(input_x, n_filters)
 	encoded_pool = layers.MaxPooling2D((2, 2), strides=(2, 2))(encoded)
 	return encoded_pool, encoded
+
+def decoder_block(input_x, concat_x, n_filters):
+	decoded_x = layers.Conv2DTranspose(n_filters, (2, 2), strides=(2, 2), padding='same')(input_x)
+	decoded_x = layers.concatenate([concat_x, decoded_x], axis=-1)
+	decoded_x = layers.BatchNormalization()(decoded_x)
+	decoded_x = layers.Activation('relu')(decoded_x)
+
+	decoded_x = layers.Conv2D(n_filters, (3, 3), padding='same')(decoded_x)
+	decoded_x = layers.BatchNormalization()(decoded_x)
+	decoded_x = layers.Activation('relu')(decoded_x)
+
+	decoded_x = layers.Conv2D(n_filters, (3, 3), padding='same')(decoded_x)
+	decoded_x = layers.BatchNormalization()(decoded_x)
+	decoded_x = layers.Activation('relu')(decoded_x)
+	
+	return decoded_x
