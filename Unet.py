@@ -36,6 +36,7 @@ def decoder_block(input_x, concat_x, n_filters):
 
 def get_model():
 	# encoder0=256 padding same is used
+	# Size None for a FCN
 	inputs = layers.Input(shape=[None, None, 3]) # 256(encoder0_pool), /2 using maxpool
 	encoder0_pool, encoder0 = encoder_block(inputs, 32) # 128(encoder1_pool), /2 using maxpool
 	encoder1_pool, encoder1 = encoder_block(encoder0_pool, 64) # 64, /2 using maxpool
@@ -50,10 +51,12 @@ def get_model():
 	decoder2 = decoder_block(decoder3, encoder2, 128) # 64
 	decoder1 = decoder_block(decoder2, encoder1, 64) # 128
 	decoder0 = decoder_block(decoder1, encoder0, 32) # 256
+	
+	
 	outputs = layers.Conv2D(1, (1, 1), activation='sigmoid')(decoder0)
 
 	model = models.Model(inputs=[inputs], outputs=[outputs])
 
-	model.compile(optimizer=optimizers.get('Adam'), loss=losses.get('CategoricalCrossentropy'),metrics=['categorical_accuracy'])
+	model.compile(optimizer=optimizers.get('SGD'), loss=losses.get('CategoricalCrossentropy'),metrics=['categorical_accuracy'])
 
 	return model
