@@ -53,7 +53,7 @@ def get_model():
 	decoder0 = decoder_block(decoder1, encoder0, 32) # 256
 	
 	
-	outputs = layers.Conv2D(1, (1, 1), activation='sigmoid')(decoder0)
+	outputs = layers.Conv2D(1, (1, 1), activation='softmax')(decoder0)
 
 	model = models.Model(inputs=[inputs], outputs=[outputs])
 
