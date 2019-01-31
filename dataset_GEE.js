@@ -70,6 +70,16 @@ var nlcd_image = nlcd_water_ice
 nlcd_image = nlcd_image.rename(['water','dev','vegi','wetland'])              
 var combined =  nlcd_image.addBands(image_landsat)
 
+// ================ Neighborhood selection =============
+var KERNEL_SIZE = 256;
+var list = ee.List.repeat(1, KERNEL_SIZE)
+var lists = ee.List.repeat(list, KERNEL_SIZE)
+var kernel = ee.Kernel.fixed(KERNEL_SIZE, KERNEL_SIZE, lists)
+
+var combined_array = combined.neighborhoodToArray(kernel)
+
+
+
 Map.addLayer(combined,{},'nlcd lancover')
 
 
