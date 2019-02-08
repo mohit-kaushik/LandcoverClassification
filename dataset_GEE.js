@@ -78,6 +78,34 @@ var kernel = ee.Kernel.fixed(KERNEL_SIZE, KERNEL_SIZE, lists)
 
 var combined_array = combined.neighborhoodToArray(kernel)
 
+var sample_size= 50;
+var feature_samples = ee.FeatureCollection([]);
+for(var j=0;j<sample_size;j++){
+      // print(i)
+      var sample = combined_array.sample({
+        region: image_landsat.geometry(), 
+        scale : 10,
+        numPixels : 12, // Size of the shard.
+        seed : j+300, 
+        tileScale : 8
+      })
+      feature_samples=feature_samples.merge(sample)
+}
+
+var bucket = 'BUCKET NAME';
+
+function export_data(dataset, desc, prefix, Bands){
+  Export.table.toCloudStorage({
+    collection : dataset,
+    description : desc, 
+    bucket : bucket, 
+    //folder : 'Data/UNet/'+cloud_Folder+"/",
+    fileNamePrefix: prefix,
+    fileFormat : 'TFRecord',
+    // selectors : Bands
+  })
+}
+export_data(feature_samples, 'LancoverDataset','Landcover')
 
 
 Map.addLayer(combined,{},'nlcd lancover')
