@@ -19,3 +19,8 @@
 
 </ul>
 <img src="./images/landcover.png">
+<h2>Results</h2>
+<p>Epochs: 80</p>
+<p>Batch size: 10</p>
+<p>Categorical accuracy Training: 79.02</p>
+<p>Categorical accuracy Evaluation: 70.40</p>
